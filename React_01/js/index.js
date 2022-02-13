@@ -1,12 +1,8 @@
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////
 
 function reducer(state, { type, ШО, СКОКА }) { //объект action деструктуризируется на три переменных
     if (!state) { //начальная уборка в ларьке:
+         // state = localStorage.setItem("myStore", JSON.stringify(productObj.value));
         return {
             пиво: { цена: 20, количество: 100, касса: 0 },
             чипсы: { цена: 10, количество: 100, касса: 0 },
@@ -23,7 +19,9 @@ function reducer(state, { type, ШО, СКОКА }) { //объект action де
                     количество: state[ШО].количество - СКОКА,
                     касса: state[ШО].касса + (СКОКА * state[ШО].цена)
                 }
+                
             }
+
         } else {
             alert(`Столько ${ШО} нет! Осталось ${state[ШО].количество} шт.`)
         }
@@ -86,6 +84,7 @@ btn.addEventListener('click', () => {
     let itemName = document.getElementById("items").value;
     let itemQuantity = document.getElementById("quantityinput").value;
     store.dispatch({ type: 'КУПИТЬ', ШО: itemName, СКОКА: itemQuantity })
+
     printTable();
 });
 
@@ -93,11 +92,13 @@ printTable();
 
 function printTable() {
     let productObj = store.getState();
+    localStorage.setItem("myStore", JSON.stringify(productObj));
+
     document.getElementById('typePtoduct').innerHTML = ''
     document.getElementById('costProduct').innerHTML = ''
     document.getElementById('amountProduct').innerHTML = ''
 
-    let arr = [];
+    let kassa = [];
 
     for (const productType in productObj) {
         let tdProduct = document.createElement('td')
@@ -112,10 +113,10 @@ function printTable() {
         tdAmount.innerHTML = `Остаток: ${productObj[productType].количество}`
         document.getElementById('amountProduct').appendChild(tdAmount)
 
-        arr.push(productObj[productType].касса)
+        kassa.push(productObj[productType].касса)
     }
 
-    let sum = arr.reduce((acc, value) => acc + value, 0)
+    let sum = kassa.reduce((acc, value) => acc + value, 0)
     document.getElementById('spanCost').innerHTML = `Касса: ${sum}`
 }
 
